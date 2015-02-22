@@ -7,17 +7,11 @@
     "name": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert"
   },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/jonschlinkert/helper-resolve.git"
-  },
+  "repository": "jonschlinkert/helper-resolve",
   "bugs": {
     "url": "https://github.com/jonschlinkert/helper-resolve/issues"
   },
-  "license": {
-    "type": "MIT",
-    "url": "https://github.com/jonschlinkert/helper-resolve/blob/master/LICENSE"
-  },
+  "license": "MIT",
   "files": [
     "index.js"
   ],
@@ -29,12 +23,12 @@
     "test": "mocha"
   },
   "dependencies": {
+    "lodash": "^3.2.0",
     "resolve": "^1.1.0"
   },
   "devDependencies": {
     "handlebars": "^3.0.0",
     "jquery": "^2.1.3",
-    "lodash": "^3.2.0",
     "mocha": "*",
     "resolve": "^1.1.0",
     "should": "*",

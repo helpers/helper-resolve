@@ -1,14 +1,14 @@
 /*!
  * helper-resolve <https://github.com/jonschlinkert/helper-resolve>
  *
- * Copyright (c) 2015 Jon Schlinkert.
- * Licensed under the MIT license.
+ * Copyright (c) 2015, Jon Schlinkert.
+ * Licensed under the MIT License.
  */
 
 'use strict';
 
 var path = require('path');
-var should = require('should');
+require('should');
 var handlebars = require('handlebars');
 var Template = require('template');
 var template = new Template();
