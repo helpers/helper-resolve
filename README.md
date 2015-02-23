@@ -49,7 +49,7 @@ Pull requests and stars are always welcome. For bugs and feature requests, [plea
 
 ## License
 Copyright (c) 2015 Jon Schlinkert  
-Released under the MIT license
+Released under the  license
 
 ***
 
