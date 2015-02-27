@@ -8,26 +8,47 @@
 'use strict';
 
 var path = require('path');
-var resolve = require('resolve');
-var _ = require('lodash');
+var relative = require('relative');
+var chalk = require('chalk');
 
-module.exports = function (name, opts, cb) {
-  var ctx = {};
+/**
+ * Expose `resolve` helper
+ */
 
-  // compatibility with template, verb and assemble.
-  if (this && this.app && this.context) {
-    ctx = _.merge({}, this.app.cache.data, this.context);
+module.exports = function resolve(fp, next) {
+  return next(null, resolveSync(fp));
+};
+
+/**
+ * Expose `resolve.sync` helper
+ */
+
+module.exports.sync = resolveSync;
+
+function resolveSync(name) {
+  var base = path.resolve(process.cwd(), 'node_modules', name);
+  var pkg = tryRequire(path.join(base, 'package.json'));
+  var cwd = path.join(base, pkg.main);
+
+  var res = {};
+  res.pkg = pkg;
+  res.cwd = relative(cwd);
+  res.dest = pkg.homepage;
+  return res;
+}
+
+/**
+ * Try to require a file, fail silently
+ */
+
+function tryRequire(fp) {
+  if (typeof fp === 'undefined') {
+    throw new Error('helpers-resolve: tryRequire() requires a string.');
   }
-
-  if (opts && opts.hash && opts.data) {
-    opts = _.merge({}, opts, opts.hash);
+  try {
+    return require(path.resolve(fp));
+  } catch(err) {
+    console.error(chalk.red('helper-resolve cannot find'), chalk.bold(fp), err);
   }
-
-  opts = _.merge({}, ctx, opts);
-
-  if (typeof cb !== 'function') {
-    return path.relative(process.cwd(), resolve.sync(name, opts));
-  }
-
-  return resolve(name, opts, cb);
+  return {};
 };
