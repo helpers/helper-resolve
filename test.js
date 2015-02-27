@@ -8,18 +8,22 @@
 'use strict';
 
 var path = require('path');
-require('should');
 var handlebars = require('handlebars');
 var Template = require('template');
 var template = new Template();
 var resolve = require('./');
+require('should');
 
 var expected = 'node_modules/jquery/index.js';
 
 describe('resolve helper', function () {
   it('should work as a Template helper (works with any engine):', function () {
     var str = '<script src="<%= resolve("jquery") %>"></script>';
-    template.helper('resolve', resolve);
+    template.asyncHelper('resolve', function (fp, cb) {
+      resolve(fp, function (err, res) {
+        cb(null, res.cwd);
+      });
+    });
 
     template.render(str, function (err, content) {
       if (err) console.log(err);
@@ -29,7 +33,10 @@ describe('resolve helper', function () {
 
   it('should work as a handlebars helper:', function () {
     var str = '{{resolve "jquery" cwd="test"}}';
-    handlebars.registerHelper('resolve', resolve);
+    handlebars.registerHelper('resolve', function (fp) {
+      return resolve.sync(fp).cwd;
+    });
+
     handlebars.compile(str)().should.equal('node_modules/jquery/dist/jquery.js');
   });
 });
