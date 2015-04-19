@@ -8,42 +8,67 @@
 'use strict';
 
 var path = require('path');
+var clone = require('clone-deep');
 var relative = require('relative');
 var chalk = require('chalk');
 
 /**
- * Expose `resolve` helper
+ * Asynchronously get the resolved path to "main" file for
+ * the given module.
+ *
+ * ```js
+ * resolve('micromatch', function(err, fp) {
+ *   //=> 'node_modules/micromatch/index.js'
+ * });
+ * ```
+ *
+ * @param  {String} `name` The name of the module to resolve.
+ * @param  {Function} `next` Callback function
+ * @return {String} File path to the module
  */
 
-module.exports = function resolve(fp, next) {
-  return next(null, resolveSync(fp));
-};
+function resolve(name, next) {
+  try {
+    return next(null, resolveSync(name));
+  } catch(err) {
+    next(err);
+    return;
+  }
+}
 
 /**
- * Expose `resolve.sync` helper
+ * Synchronously get the resolved path to "main" file for
+ * the given module.
+ *
+ * ```js
+ * var fp = resolve.sync('micromatch');
+ * //=> 'node_modules/micromatch/index.js'
+ * ```
+ *
+ * @param  {String} `name` The name of the module to resolve.
+ * @param  {Function} `next` Callback function
+ * @return {String} File path to the module
  */
-
-module.exports.sync = resolveSync;
 
 function resolveSync(name) {
   var base = path.resolve(process.cwd(), 'node_modules', name);
-  var pkg = tryRequire(path.join(base, 'package.json'));
-  var cwd = path.join(base, pkg.main);
+  var pkg = tryResolve(path.join(base, 'package.json'));
 
-  var res = {};
-  res.pkg = pkg;
-  res.cwd = relative(cwd);
-  res.dest = pkg.homepage;
+  var res = clone(pkg);
+  res.main = relative(path.join(base, pkg && pkg.main));
   return res;
 }
 
 /**
- * Try to require a file, fail silently
+ * Try to require a file, fail silently if unsuccesful
+ *
+ * @param  {String} `fp`
+ * @return {String} Resolved filepath
  */
 
-function tryRequire(fp) {
+function tryResolve(fp) {
   if (typeof fp === 'undefined') {
-    throw new Error('helpers-resolve: tryRequire() requires a string.');
+    throw new Error('helpers-resolve: tryResolve() requires a string.');
   }
   try {
     return require(path.resolve(fp));
@@ -52,3 +77,15 @@ function tryRequire(fp) {
   }
   return {};
 };
+
+/**
+ * Expose `resolve` helper
+ */
+
+module.exports = resolve;
+
+/**
+ * Expose `resolve.sync` helper
+ */
+
+module.exports.sync = resolveSync;
