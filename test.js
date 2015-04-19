@@ -23,9 +23,13 @@ describe('resolve helper', function () {
   it('should work as an async helper with Template:', function () {
     var str = '<script src="<%= resolve("jquery") %>"></script>';
 
-    template.asyncHelper('resolve', function (fp, cb) {
-      resolve(fp, function (err, resolved) {
-        cb(null, resolved.main);
+    template.asyncHelper('resolve', function (name, key, cb) {
+      if (typeof key === 'function') {
+        cb = key;
+        key = 'main';
+      }
+      resolve(name, function (err, res) {
+        cb(null, res[key]);
       });
     });
 
@@ -36,21 +40,26 @@ describe('resolve helper', function () {
   });
 
   it('should work as a sync helper with Template:', function () {
-    var str = '<script src="<%= resolve("jquery").main %>"></script>';
     template.helper('resolve', resolve.sync);
 
-    template.render(str, function (err, content) {
+    var main = '<script src="<%= resolve("jquery").main %>"></script>';
+    template.render(main, function (err, content) {
       if (err) console.log(err);
       content.should.equal('<script src="node_modules/jquery/dist/jquery.js"></script>');
+    });
+
+    var homepage = '<script src="<%= resolve("jquery").homepage %>"></script>';
+    template.render(homepage, function (err, content) {
+      if (err) console.log(err);
+      content.should.equal('<script src="http://jquery.com"></script>');
     });
   });
 
   it('should work as a handlebars helper:', function () {
     var str = '{{resolve "jquery"}}';
-    handlebars.registerHelper('resolve', function (fp) {
-      return resolve.sync(fp).main;
+    handlebars.registerHelper('resolve', function (fp, key) {
+      return resolve.sync(fp)[typeof key === 'string' ? key : 'main'];
     });
-
     handlebars.compile(str)().should.equal('node_modules/jquery/dist/jquery.js');
   });
 });
