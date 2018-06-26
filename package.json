@@ -1,12 +1,9 @@
 {
   "name": "helper-resolve",
-  "description": "Template helper to resolve the path to a file in node_modules. This is mostly useful during development.",
+  "description": "Templates helper to resolve the path to a file in node_modules. This is mostly useful during development.",
   "version": "0.3.1",
   "homepage": "https://github.com/jonschlinkert/helper-resolve",
-  "author": {
-    "name": "Jon Schlinkert",
-    "url": "https://github.com/jonschlinkert"
-  },
+  "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/helper-resolve",
   "bugs": {
     "url": "https://github.com/jonschlinkert/helper-resolve/issues"
@@ -35,5 +32,8 @@
     "should": "*",
     "template": "^0.12.6"
   },
-  "keywords": []
+  "keywords": [
+    "helper",
+    "resolve"
+  ]
 }

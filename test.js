@@ -1,7 +1,7 @@
 /*!
  * helper-resolve <https://github.com/jonschlinkert/helper-resolve>
  *
- * Copyright (c) 2015, Jon Schlinkert.
+ * Copyright (c) 2015-2018, Jon Schlinkert.
  * Licensed under the MIT License.
  */
 
