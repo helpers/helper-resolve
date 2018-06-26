@@ -8,17 +8,16 @@
 'use strict';
 
 /* deps:mocha jquery */
-require('should');
-var handlebars = require('handlebars');
-var resolve = require('./');
-var template;
+const assert = require('assert');
+const handlebars = require('handlebars');
+const resolve = require('./');
 
-describe('resolve helper', function () {
-  it('should work as a handlebars helper:', function () {
-    var str = '{{resolve "jquery"}}';
-    handlebars.registerHelper('resolve', function (fp, key) {
+describe('resolve helper', function() {
+  it('should work as a handlebars helper:', function() {
+    const str = '{{resolve "jquery"}}';
+    handlebars.registerHelper('resolve', function(fp, key) {
       return resolve.sync(fp)[typeof key === 'string' ? key : 'main'];
     });
-    handlebars.compile(str)().should.equal('node_modules/jquery/dist/jquery.js');
+    assert.equal(handlebars.compile(str)(), 'node_modules/jquery/dist/jquery.js');
   });
 });
