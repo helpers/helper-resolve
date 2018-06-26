@@ -10,7 +10,8 @@
 var path = require('path');
 var clone = require('clone-deep');
 var relative = require('relative');
-var chalk = require('chalk');
+var red = require('ansi-red');
+var bold = require('ansi-bold');
 
 /**
  * Asynchronously get the resolved path to "main" file for
@@ -73,7 +74,7 @@ function tryResolve(fp) {
   try {
     return require(path.resolve(fp));
   } catch(err) {
-    console.error(chalk.red('helper-resolve cannot find'), chalk.bold(fp), err);
+    console.error(red('helper-resolve cannot find'), bold(fp), err);
   }
   return {};
 };
